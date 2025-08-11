@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Walking Price Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="calculator-card">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="step-counter">
+                <span id="currentStep">1</span> of <span id="totalSteps">5</span>
+            </div>
+
+            <!-- Step 1: Location -->
+            <div class="step active" id="step1">
+                <div class="step-header">
+                    <h2>Where are you located?</h2>
+                    <p>We'll use this to calculate location-based pricing</p>
+                </div>
+                <div class="form-group">
+                    <div class="location-input-container">
+                        <input type="text" id="locationInput" placeholder="Start typing your location..." autocomplete="off">
+                        <div id="locationSuggestions" class="suggestions-dropdown"></div>
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-primary" id="nextBtn1" disabled>Next</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Experience -->
+            <div class="step" id="step2">
+                <div class="step-header">
+                    <h2>How many years of experience do you have with dogs?</h2>
+                    <p>More experience typically commands higher rates</p>
+                </div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="under1">
+                            <div class="radio-content">
+                                <div class="radio-title">Under 1 year</div>
+                                <div class="radio-description">New to dog walking</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="2-5">
+                            <div class="radio-content">
+                                <div class="radio-title">2–5 years</div>
+                                <div class="radio-description">Experienced walker</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="experience" value="5+">
+                            <div class="radio-content">
+                                <div class="radio-title">5+ years</div>
+                                <div class="radio-description">Highly experienced professional</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-secondary" id="backBtn2">Back</button>
+                    <button class="btn btn-primary" id="nextBtn2" disabled>Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: First Aid -->
+            <div class="step" id="step3">
+                <div class="step-header">
+                    <h2>Do you have first aid training for dogs?</h2>
+                    <p>Certified first aid training adds value to your service</p>
+                </div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="firstAid" value="yes">
+                            <div class="radio-content">
+                                <div class="radio-title">Yes, I'm certified</div>
+                                <div class="radio-description">I have current pet first aid certification</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="firstAid" value="no">
+                            <div class="radio-content">
+                                <div class="radio-title">No certification</div>
+                                <div class="radio-description">I don't have formal first aid training</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-secondary" id="backBtn3">Back</button>
+                    <button class="btn btn-primary" id="nextBtn3" disabled>Next</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Walk Type -->
+            <div class="step" id="step4">
+                <div class="step-header">
+                    <h2>What type of walk do you prefer?</h2>
+                    <p>Solo walks typically charge more per dog than group walks</p>
+                </div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="walkType" value="solo">
+                            <div class="radio-content">
+                                <div class="radio-title">Solo Walk</div>
+                                <div class="radio-description">One-on-one attention for the dog</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="walkType" value="group">
+                            <div class="radio-content">
+                                <div class="radio-title">Group Walk</div>
+                                <div class="radio-description">Walking multiple dogs together</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Group Size Selection (hidden initially) -->
+                <div class="form-group" id="groupSizeSection" style="display: none;">
+                    <label for="groupSize">How many dogs would you walk together?</label>
+                    <select id="groupSize" class="select-input">
+                        <option value="">Select number of dogs</option>
+                        <option value="2">2 dogs</option>
+                        <option value="3">3 dogs</option>
+                        <option value="4">4 dogs</option>
+                        <option value="5">5 dogs</option>
+                        <option value="6">6+ dogs</option>
+                    </select>
+                </div>
+
+                <div class="step-actions">
+                    <button class="btn btn-secondary" id="backBtn4">Back</button>
+                    <button class="btn btn-primary" id="nextBtn4" disabled>Next</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Walk Length -->
+            <div class="step" id="step5">
+                <div class="step-header">
+                    <h2>How long would your walks typically be?</h2>
+                    <p>Longer walks command proportionally higher rates</p>
+                </div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="walkLength" value="30">
+                            <div class="radio-content">
+                                <div class="radio-title">30 minutes</div>
+                                <div class="radio-description">Quick exercise and toilet break</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="walkLength" value="60">
+                            <div class="radio-content">
+                                <div class="radio-title">1 hour</div>
+                                <div class="radio-description">Standard walk with good exercise</div>
+                            </div>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="walkLength" value="90">
+                            <div class="radio-content">
+                                <div class="radio-title">1.5 hours</div>
+                                <div class="radio-description">Extended walk with plenty of exercise</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-secondary" id="backBtn5">Back</button>
+                    <button class="btn btn-primary" id="calculateBtn">Calculate Price</button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="step" id="results" style="display: none;">
+                <div class="results-header">
+                    <h2>Your Recommended Pricing</h2>
+                    <div class="price-display">
+                        <span class="currency">£</span>
+                        <span class="price" id="finalPrice">0</span>
+                        <span class="duration" id="priceDuration">per walk</span>
+                    </div>
+                </div>
+
+                <div class="calculation-breakdown">
+                    <h3>How this is calculated</h3>
+                    <div class="breakdown-list" id="breakdownList">
+                        <!-- Breakdown items will be populated by JavaScript -->
+                    </div>
+                    <div class="breakdown-total">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Total per walk</span>
+                            <span class="breakdown-value">£<span id="breakdownTotal">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button class="btn btn-secondary" id="startOverBtn">Start Over</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
