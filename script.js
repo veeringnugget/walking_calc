@@ -457,28 +457,48 @@ class DogWalkingCalculator {
         document.getElementById('currentStep').textContent = 'Complete';
     }
 
-    startOver() {
-        this.currentStep = 1;
-        this.formData = {};
-        
-        // Reset all form inputs
-        document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
-        document.getElementById('locationInput').value = '';
-        document.getElementById('groupSize').value = '';
-        
-        // Reset button states
-        document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
-        document.getElementById('nextBtn1').disabled = true;
-        
-        // Hide group size section
-        document.getElementById('groupSizeSection').style.display = 'none';
-        
-        // Hide results and show first step
-        document.getElementById('results').classList.remove('show', 'active');
-        document.getElementById('step1').classList.add('active');
-        
-        this.updateProgress();
+startOver() {
+    this.currentStep = 1;
+    this.formData = {};
+
+    // Reset all form inputs
+    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+    document.getElementById('locationInput').value = '';
+    document.getElementById('groupSize').value = '';
+
+    // Reset button states
+    document.querySelectorAll('.btn-primary').forEach(btn => btn.disabled = true);
+
+    // Specifically enable first step's next button only when input entered
+    document.getElementById('nextBtn1').disabled = true;
+
+    // Hide group size section (in case it was shown)
+    document.getElementById('groupSizeSection').style.display = 'none';
+
+    // Hide results panel
+    const resultsEl = document.getElementById('results');
+    resultsEl.style.display = 'none';
+    resultsEl.classList.remove('show', 'active');
+
+    // Hide all steps and only show step1
+    for (let i = 1; i <= this.totalSteps; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        if (stepEl) {
+            stepEl.classList.remove('active', 'slide-out');
+            stepEl.style.display = 'none';
+        }
     }
+    const step1El = document.getElementById('step1');
+    step1El.style.display = 'block';
+    step1El.classList.add('active');
+
+    // Reset progress bar and step label
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('currentStep').textContent = '1';
+
+    // Also, disable calculate button on step 5, just in case
+    document.getElementById('calculateBtn').disabled = true;
+}
 }
 
 // Initialize the calculator when the DOM is loaded
